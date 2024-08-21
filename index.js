@@ -8,7 +8,7 @@ app.use(express.json()) //converts json of request body to js object
 const cors = require('cors')
 
 app.use(cors())
-//app.use(express.static('dist'))
+app.use(express.static('dist'))
 
 
 app.post('/api/notes', (request, response) => {
