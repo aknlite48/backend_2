@@ -52,6 +52,29 @@ app.get('/api/notes/:id',(request,response)=>{
   })
 })
 
+app.put('/api/notes/:id',(request,response)=>{
+  const note = {
+    content: request.body.content,
+    important: request.body.important
+  }
+  Note.findByIdAndUpdate(request.params.id,note,{ new: true })
+  .then((n)=>{
+    response.json(n)
+  })
+  .catch((error)=>{
+    response.json(error)
+  })
+})
+
+app.delete('/api/notes/:id',(request,response)=>{
+  Note.findByIdAndDelete(request.params.id)
+  .then(()=>{
+    response.status(204).end()
+  })
+  .catch(()=>{
+    response.json(error)
+  })
+})
 /*
 app.put('/api/notes/:id',(request,response)=>{
   const id = request.params.id
