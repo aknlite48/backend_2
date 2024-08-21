@@ -1,14 +1,14 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const Note = require('models/notes')
+const Note = require('./models/notes')
 
 app.use(express.json()) //converts json of request body to js object
 
 const cors = require('cors')
 
 app.use(cors())
-app.use(express.static('dist'))
+//app.use(express.static('dist'))
 
 
 app.post('/api/notes', (request, response) => {
@@ -42,10 +42,13 @@ app.get('/api/notes',(request,response)=>{
 })
 
 app.get('/api/notes/:id',(request,response)=>{
-  const id = request.params.id
+  //const id = request.params.id
 
-  Note.findById(request.params.id).then(note => {
+  Note.findById(request.params.id).then((note) => {
     response.json(note)
+  })
+  .catch(()=>{
+    response.status(404).json({error : 'not found'})
   })
 })
 
