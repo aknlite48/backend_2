@@ -27,6 +27,9 @@ app.post('/api/notes', (request, response) => {
   .then((posted_note)=>{
     response.json(posted_note)
   })
+  .catch(error=>{
+    response.status(400).json({error: error.name})
+  })
   
 })
 
@@ -57,7 +60,7 @@ app.put('/api/notes/:id',(request,response)=>{
     content: request.body.content,
     important: request.body.important
   }
-  Note.findByIdAndUpdate(request.params.id,note,{ new: true })
+  Note.findByIdAndUpdate(request.params.id,note,{ new: true,runValidators: true, context: 'query' })
   .then((n)=>{
     response.json(n)
   })
