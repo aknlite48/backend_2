@@ -3,13 +3,23 @@ const express = require('express')
 const app = express()
 const Note = require('./models/notes')
 
+//const usersRouter = require('./controllers/users')
+//app.use('api/users',usersRouter)
+const User = require('./models/users')
+
 app.use(express.json()) //converts json of request body to js object
 
 const cors = require('cors')
 
 app.use(cors())
-app.use(express.static('dist'))
+//app.use(express.static('dist'))
 
+//*
+app.post('api/users',(request,response)=>{
+  const body = request.body
+  response.status(201).json({u:body.username})
+})
+//*
 
 app.post('/api/notes', (request, response) => {
   const body = request.body
@@ -17,7 +27,7 @@ app.post('/api/notes', (request, response) => {
     console.log('content missing')
     return response.status(400).json({error:'content missing'})
   }
-
+  console.log('post attempt')
   const note = new Note({
     content: body.content,
     important: Boolean(body.important)
