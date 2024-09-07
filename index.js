@@ -3,23 +3,55 @@ const express = require('express')
 const app = express()
 const Note = require('./models/notes')
 
-//const usersRouter = require('./controllers/users')
-//app.use('api/users',usersRouter)
-const User = require('./models/users')
+app.use(express.json())
+const usersRouter = require('./controllers/users')
+app.use('/api/users',usersRouter)
 
-app.use(express.json()) //converts json of request body to js object
+
+//app.use(express.json()) //converts json of request body to js object
 
 const cors = require('cors')
 
 app.use(cors())
 //app.use(express.static('dist'))
 
+/*
 //*
-app.post('api/users',(request,response)=>{
-  const body = request.body
-  response.status(201).json({u:body.username})
+app.post('/api/users',(request,response)=>{
+  const {username,name,password} = request.body
+  const saltRounds = 10
+  let passwordHash
+  bcrypt.hash(password, saltRounds)
+  .then((result)=>{
+    passwordHash=result
+  })
+
+  const new_user = new User({
+      username : username,
+      name : name,
+      passwordHash : passwordHash
+  })
+
+  new_user.save()
+  .then((posted_user)=>{
+      response.status(201).json(posted_user)
+  })
+  .catch((error)=>{
+      response.status(400).json({error : error.name})
+  })
+})
+
+app.get('/api/users',(request,response)=>{
+  User.find({})
+  .then((result)=>{
+    response.json(result)
+  })
+  .catch((error)=>{
+    response.status(400).json({error:error.name})
+  })
 })
 //*
+*/
 
 app.post('/api/notes', (request, response) => {
   const body = request.body

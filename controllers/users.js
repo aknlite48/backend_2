@@ -1,12 +1,16 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
-const { request, response } = require('express')
+//const { request, response } = require('express')
 
 usersRouter.post('/',(request,response)=>{
     const {username,name,password} = request.body
     const saltRounds = 10
-    const passwordHash = bcrypt.hash(password, saltRounds)
+    let passwordHash
+    bcrypt.hash(password, saltRounds)
+    .then((result)=>{
+      passwordHash=result
+    })
 
     const new_user = new User({
         username : username,
