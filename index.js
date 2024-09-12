@@ -13,7 +13,7 @@ app.use('/api/users',usersRouter)
 const cors = require('cors')
 
 app.use(cors())
-//app.use(express.static('dist'))
+app.use(express.static('dist'))
 
 /*
 //*
