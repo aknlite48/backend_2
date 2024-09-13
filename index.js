@@ -5,8 +5,9 @@ const Note = require('./models/notes')
 
 app.use(express.json())
 const usersRouter = require('./controllers/users')
+const notesRouter = require('./controllers/notes')
 app.use('/api/users',usersRouter)
-
+app.use('/api/notes',notesRouter)
 
 //app.use(express.json()) //converts json of request body to js object
 
@@ -53,6 +54,7 @@ app.get('/api/users',(request,response)=>{
 //*
 */
 
+/* shifted to controllers/notes.js
 app.post('/api/notes', (request, response) => {
   const body = request.body
   if (!body.content) {
@@ -120,6 +122,10 @@ app.delete('/api/notes/:id',(request,response)=>{
     response.json(error)
   })
 })
+*/
+
+
+
 /*
 app.put('/api/notes/:id',(request,response)=>{
   const id = request.params.id

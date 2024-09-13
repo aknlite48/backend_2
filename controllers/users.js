@@ -29,7 +29,7 @@ usersRouter.post('/',(request,response)=>{
 })
 
 usersRouter.get('/',(request,response)=>{
-    User.find({})
+    User.find({}).populate('notes',{ content: 1, important: 1 })
     .then((result)=>{
         response.json(result)
     })
