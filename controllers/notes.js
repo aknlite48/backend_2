@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const getTokenFrom = (request) => {
     const authorize = request.get('authorization') //returns header with field authorization
 
-    if (authorize && authorize.startsWth('Bearer ')) {
+    if (authorize && authorize.startsWith('Bearer ')) {
         return authorize.replace('Bearer ','')
     }
     return null
@@ -15,9 +15,12 @@ const getTokenFrom = (request) => {
 
 notesRouter.post('/',async (request,response)=>{
     const body = request.body
-    const decode_token = jwt.verify(getTokenFrom(request),process.env.SECRET)
+    let decode_token
 
-    if (!decode_token.id) {
+    try {
+        decode_token = jwt.verify(getTokenFrom(request),process.env.SECRET)
+    }
+    catch (error) {
         return response.status(401).json({error : "invalid token"})
     }
 
