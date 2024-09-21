@@ -5,7 +5,7 @@ import axios from 'axios'
 
 //const base_url = "http://localhost:3001/api/notes"
 const base_url = "/api/notes"
-
+var token,auth_obj
 
 const App = (props) => {
 
@@ -15,6 +15,7 @@ const App = (props) => {
   const [isImp,setImp] = useState(false)
   const [username,set_username] = useState('')
   const [password,set_password] = useState('')
+  const [user,set_user] = useState(null)
 
   const hook = () => {
     //console.log('effect')
@@ -31,13 +32,24 @@ const App = (props) => {
   
   useEffect(hook, [])
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
+    const login_url = "/api/login"
     try {
+      const credentials = {username: username,password: password}
+      const recieved_token = await axios.post(login_url,credentials)
+      console.log(recieved_token.data)
+      token = `Bearer ${recieved_token.data.token}`
+      auth_obj = {
+        headers: {Authorization: token}
+      }
+      set_user(recieved_token)
+      set_username('')
+      set_password('')
 
     }
     catch (error) {
-
+      console.log('login error')
     }
   }
 
@@ -49,7 +61,7 @@ const App = (props) => {
       important: Math.random() < 0.5
     }
     axios
-    .post(base_url,newnote1)
+    .post(base_url,newnote1,auth_obj)
     .then(response=>{
       //console.log("connection")
       setNotes(notes.concat(response.data))
@@ -146,22 +158,37 @@ const App = (props) => {
 
 
   const Login_portal = () => {
+    if (!user) {
     return (
       <div>
-        <form onSubmit={()=>{console.log("login submitted")}}>
-          <p>Username: <input type="text" value={username} name="username" onChange={()=>{set_username(target.value)}}/></p>
-          <p>Password: <input type="password" value={password} name="password" onChange={()=>{set_password(target.value)}}/></p>
+        <form onSubmit={handleLogin}>
+          <p>Username: <input type="text" value={username} name="username" onChange={(event)=>{set_username(event.target.value)}}/></p>
+          <p>Password: <input type="password" value={password} name="password" onChange={(event)=>{set_password(event.target.value)}}/></p>
       
           <button type="submit">Login</button>
         </form>
       </div>
     )
   }
+}
+
+  const Add_portal = () => {
+    if (user) {
+    return (
+      <div>
+      <form onSubmit={addNote}>
+        <input value={newnote} onChange={onchangefun}/>
+        <button type="submit">save</button>
+      </form> 
+      </div>
+    )
+  }
+}
 
 
   return (
     <div>
-      <Login_portal />
+      {Login_portal()}
       <h1 id='jtop'>Notes</h1> 
       <button onClick={()=>{if (isImp) {setImp(false)} else {setImp(true)}}}>Show Imp</button>
       <button id='jtop' onClick={()=>{if (to_sort===0) {set_sort(1)} if (to_sort===1) {set_sort(2)} if (to_sort===2) {set_sort(0)}}}>{sort_display[to_sort]}</button>
@@ -170,11 +197,8 @@ const App = (props) => {
       <To_rend />
 
 
-      <form onSubmit={addNote}>
-        <input value={newnote} onChange={onchangefun}/>
-        <button type="submit">save</button>
-      </form> 
 
+      {Add_portal()}
 
 
     </div>
