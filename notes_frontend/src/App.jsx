@@ -13,6 +13,8 @@ const App = (props) => {
   const [newnote,setNewNote] = useState('a new note')
   const [to_sort,set_sort] = useState(0)
   const [isImp,setImp] = useState(false)
+  const [username,set_username] = useState('')
+  const [password,set_password] = useState('')
 
   const hook = () => {
     //console.log('effect')
@@ -28,6 +30,16 @@ const App = (props) => {
   }
   
   useEffect(hook, [])
+
+  const handleLogin = (event) => {
+    event.preventDefault()
+    try {
+
+    }
+    catch (error) {
+
+    }
+  }
 
   const addNote = (event)=>{
     event.preventDefault()
@@ -133,11 +145,23 @@ const App = (props) => {
   const sort_display = ['↑','↓','-']
 
 
-  
+  const Login_portal = () => {
+    return (
+      <div>
+        <form onSubmit={()=>{console.log("login submitted")}}>
+          <p>Username: <input type="text" value={username} name="username" onChange={()=>{set_username(target.value)}}/></p>
+          <p>Password: <input type="password" value={password} name="password" onChange={()=>{set_password(target.value)}}/></p>
+      
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    )
+  }
 
 
   return (
     <div>
+      <Login_portal />
       <h1 id='jtop'>Notes</h1> 
       <button onClick={()=>{if (isImp) {setImp(false)} else {setImp(true)}}}>Show Imp</button>
       <button id='jtop' onClick={()=>{if (to_sort===0) {set_sort(1)} if (to_sort===1) {set_sort(2)} if (to_sort===2) {set_sort(0)}}}>{sort_display[to_sort]}</button>
