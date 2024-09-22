@@ -5,7 +5,6 @@ import axios from 'axios'
 
 //const base_url = "http://localhost:3001/api/notes"
 const base_url = "/api/notes"
-var token,auth_obj
 
 const App = (props) => {
 
@@ -32,6 +31,15 @@ const App = (props) => {
   
   useEffect(hook, [])
 
+  const user_prevent_reload = () =>{
+    const user_JSON = window.sessionStorage.getItem('user_json')
+    if (user_JSON) {
+      set_user(JSON.parse(user_JSON))
+    }
+  }
+
+  useEffect(user_prevent_reload,[])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     const login_url = "/api/login"
@@ -39,11 +47,8 @@ const App = (props) => {
       const credentials = {username: username,password: password}
       const recieved_token = await axios.post(login_url,credentials)
       console.log(recieved_token.data)
-      token = `Bearer ${recieved_token.data.token}`
-      auth_obj = {
-        headers: {Authorization: token}
-      }
-      set_user(recieved_token)
+      set_user(recieved_token.data)
+      window.sessionStorage.setItem('user_json',JSON.stringify(recieved_token.data))
       set_username('')
       set_password('')
 
@@ -59,6 +64,9 @@ const App = (props) => {
       id:(notes.length+1),
       content: newnote,
       important: Math.random() < 0.5
+    }
+    const auth_obj = {
+      headers: {Authorization: `Bearer ${user.token}`}
     }
     axios
     .post(base_url,newnote1,auth_obj)
