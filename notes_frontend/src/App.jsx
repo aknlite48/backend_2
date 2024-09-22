@@ -9,7 +9,7 @@ const base_url = "/api/notes"
 const App = (props) => {
 
   const [notes,setNotes] = useState([])
-  const [newnote,setNewNote] = useState('a new note')
+  const [newnote,setNewNote] = useState('')
   const [to_sort,set_sort] = useState(0)
   const [isImp,setImp] = useState(false)
   const [username,set_username] = useState('')
@@ -46,7 +46,7 @@ const App = (props) => {
     try {
       const credentials = {username: username,password: password}
       const recieved_token = await axios.post(login_url,credentials)
-      console.log(recieved_token.data)
+      //console.log(recieved_token.data)
       set_user(recieved_token.data)
       window.sessionStorage.setItem('user_json',JSON.stringify(recieved_token.data))
       set_username('')

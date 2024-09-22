@@ -24,9 +24,8 @@ notesRouter.post('/',async (request,response)=>{
         return response.status(401).json({error : "invalid token"})
     }
 
-
     const user = await User.findById(decode_token.id)
-
+    
     const note = new Note(
         {
             content: body.content,
@@ -34,8 +33,12 @@ notesRouter.post('/',async (request,response)=>{
             user: user._id
         }
     )
-
-    const savedNote = await note.save()
+    try {
+        const savedNote = await note.save()
+    }
+    catch(error) {
+        return response.status(400).json({error: "note validation"})
+    }
     user.notes = user.notes.concat(savedNote._id)
     await user.save()
 
