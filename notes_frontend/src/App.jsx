@@ -54,7 +54,7 @@ const App = (props) => {
 
     }
     catch (error) {
-      console.log('login error')
+      alert('login error')
     }
   }
 
