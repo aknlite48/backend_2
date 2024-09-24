@@ -35,14 +35,14 @@ notesRouter.post('/',async (request,response)=>{
     )
     try {
         const savedNote = await note.save()
+        user.notes = user.notes.concat(savedNote._id)
+        await user.save()
+        return response.status(201).json(savedNote)
     }
     catch(error) {
         return response.status(400).json({error: "note validation"})
     }
-    user.notes = user.notes.concat(savedNote._id)
-    await user.save()
 
-    response.status(201).json(savedNote)
 })
 
 notesRouter.get('/',(request,response)=>{

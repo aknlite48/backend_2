@@ -33,7 +33,7 @@ const App = (props) => {
 
   const user_prevent_reload = () =>{
     const user_JSON = window.sessionStorage.getItem('user_json')
-    if (user_JSON) {
+    if (user_JSON!='') {
       set_user(JSON.parse(user_JSON))
     }
   }
@@ -56,6 +56,11 @@ const App = (props) => {
     catch (error) {
       console.log('login error')
     }
+  }
+
+  const handleLogout = () => {
+    window.sessionStorage.setItem('user_json','')
+    set_user(null)
   }
 
   const addNote = (event)=>{
@@ -175,6 +180,13 @@ const App = (props) => {
       
           <button type="submit">Login</button>
         </form>
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>
+        <button onClick={handleLogout}>Log Out</button>
       </div>
     )
   }
